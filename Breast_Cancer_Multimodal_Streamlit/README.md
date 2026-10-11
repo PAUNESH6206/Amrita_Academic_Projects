@@ -15,7 +15,7 @@ Upload an image, explore the expert models, or combine histopathology and ultras
 - Run a histopathology, ultrasound, or X-ray expert model with one image.
 - Run the fusion model with a matched histopathology + ultrasound image pair.
 - Review the notebook's validation accuracy, class F1 scores, and fusion AUC.
-- Upload JPG, JPEG, and PNG files; preprocessing resizes images to 224 × 224 RGB and scales pixels to `[0, 1]`.
+- Upload JPG, JPEG, and PNG files, or paste an image from the clipboard; preprocessing resizes images to 224 × 224 RGB and scales pixels to `[0, 1]`.
 
 ## Models and validation results
 
@@ -67,7 +67,7 @@ Each expert expects one `(224, 224, 3)` RGB image. The fusion model expects two 
 
 This is an educational research prototype, not a medical device. Predictions are model scores, not diagnoses or calibrated clinical probabilities. Do not use this dashboard for screening, diagnosis, treatment, or medical decisions.
 
-When hosted, uploaded images are sent to the Streamlit app server for inference. The app code does not save uploaded images to disk. Do not upload identifiable or sensitive images to a deployment unless you have authorization and have reviewed the hosting provider's privacy terms.
+When hosted, uploaded or pasted images are sent to the Streamlit app server for inference. Pasting avoids creating a separate image file on your device, but does not keep the image on your device alone. The app code does not save the image to disk. Do not upload identifiable or sensitive images to a deployment unless you have authorization and have reviewed the hosting provider's privacy terms.
 
 ## Project structure
 
@@ -84,3 +84,4 @@ Breast_Cancer_Multimodal_Streamlit/
     ├── xray_model.keras
     └── hist_ultrasound_fusion_model.keras
 ```
+
