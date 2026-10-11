@@ -117,7 +117,13 @@ def image_input(label: str, key: str):
         file_type=["jpg", "jpeg", "png"],
         key=f"{key}_paste",
     )
-    pasted = pasted_image_tensor(value)
+    if value is not None:
+        pasted = pasted_image_tensor(value)
+        if pasted is not None:
+            # Keep the submitted image in this session so the separate Analyze button
+            # can use it on its next rerun. No file is written to disk.
+            st.session_state[f"{key}_pasted_image"] = pasted
+    pasted = st.session_state.get(f"{key}_pasted_image")
     if pasted is None:
         st.caption("Copy an image, click the box above, paste with Ctrl+V / ⌘V, and press send. You can also attach an image there.")
     return pasted
