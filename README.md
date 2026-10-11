@@ -1,1 +1,13 @@
-# Amrita_Academic_Projects
+# Amrita Academic Projects
+
+A collection of academic projects by Paunesh Varadharajan.
+
+## Projects
+
+| Project | Summary | Status |
+| --- | --- | --- |
+| [Machine Learning Classification](Machine_Learning_Classification_Project/) | Classifies power quality faults and provides an interactive Streamlit app. | Deployed |
+
+- **Live app:** [Power Fault Classifier](https://powerfaultclassifier.streamlit.app/)
+- **Project documentation:** [Machine_Learning_Classification_Project/README.md](Machine_Learning_Classification_Project/README.md)
+- **Original repository:** [Machine_Learning_Classification_Project](https://github.com/PAUNESH6206/Machine_Learning_Classification_Project)
