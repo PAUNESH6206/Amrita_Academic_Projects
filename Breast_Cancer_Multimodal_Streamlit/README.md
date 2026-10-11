@@ -17,6 +17,17 @@ Upload an image, explore the expert models, or combine histopathology and ultras
 - Review the notebook's validation accuracy, class F1 scores, and fusion AUC.
 - Upload JPG, JPEG, and PNG files, or paste an image from the clipboard in the prediction input; preprocessing resizes images to 224 × 224 RGB and scales pixels to `[0, 1]`.
 
+## Project work and artifacts
+
+This repository includes the notebook used to document the experiments and outputs, the exported Keras model files used by the dashboard, and this Streamlit application:
+
+- **Training and results notebook:** [`notebooks/dl-breast-cancer-project.ipynb`](notebooks/dl-breast-cancer-project.ipynb)
+- **Single-modality models:** histopathology, ultrasound, and X-ray under `models/`
+- **Fusion model:** histopathology + ultrasound under `models/`
+- **Interactive evaluation dashboard:** `app.py`
+
+The notebook is included as a project record; the hosted dashboard loads the saved `.keras` models and does not retrain them.
+
 ## Models and validation results
 
 | Model | Validation accuracy | Validation examples | Class 0 F1 | Class 1 F1 |
@@ -30,7 +41,7 @@ The fusion model's recorded AUC is **0.8128**. Each model was evaluated on its o
 
 ## Dataset
 
-The notebook points to the [Breast Cancer MSI Multimodal Image Dataset on Kaggle](https://www.kaggle.com/datasets/zoya77/breast-cancer-msi-multimodal-image-dataset). Download the dataset from Kaggle and follow its access and usage terms. The dataset is not copied into this repository; the app accepts images selected from your device.
+The notebook points to the [Breast Cancer MSI Multimodal Image Dataset on Kaggle](https://www.kaggle.com/datasets/zoya77/breast-cancer-msi-multimodal-image-dataset). Download the dataset from Kaggle and follow its access and usage terms. The dataset itself is not copied into this repository; it remains available through the source link, and the app accepts images selected from your device.
 
 ## Run locally
 
@@ -76,6 +87,8 @@ Breast_Cancer_Multimodal_Streamlit/
 ├── app.py
 ├── requirements.txt
 ├── README.md
+├── notebooks/
+│   └── dl-breast-cancer-project.ipynb
 ├── .streamlit/
 │   └── config.toml
 └── models/
@@ -84,4 +97,3 @@ Breast_Cancer_Multimodal_Streamlit/
     ├── xray_model.keras
     └── hist_ultrasound_fusion_model.keras
 ```
-
