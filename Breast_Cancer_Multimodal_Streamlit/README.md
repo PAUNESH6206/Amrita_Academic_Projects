@@ -15,7 +15,7 @@ Upload an image, explore the expert models, or combine histopathology and ultras
 - Run a histopathology, ultrasound, or X-ray expert model with one image.
 - Run the fusion model with a matched histopathology + ultrasound image pair.
 - Review the notebook's validation accuracy, class F1 scores, and fusion AUC.
-- Upload JPG, JPEG, and PNG files, or paste an image from the clipboard; preprocessing resizes images to 224 × 224 RGB and scales pixels to `[0, 1]`.
+- Upload JPG, JPEG, and PNG files, or paste an image from the clipboard in the prediction input; preprocessing resizes images to 224 × 224 RGB and scales pixels to `[0, 1]`.
 
 ## Models and validation results
 
@@ -34,7 +34,7 @@ The notebook points to the [Breast Cancer MSI Multimodal Image Dataset on Kaggle
 
 ## Run locally
 
-Python 3.11 or 3.12 is recommended.
+Python 3.11 or 3.12 is recommended. Streamlit 1.65 or later is required for clipboard-paste input.
 
 ```bash
 python -m venv .venv
