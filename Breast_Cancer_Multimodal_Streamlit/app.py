@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import os
-import base64
-from io import BytesIO
 from pathlib import Path
 
 import numpy as np
@@ -85,19 +83,14 @@ def image_tensor(upload) -> tuple[Image.Image, np.ndarray]:
     return display, np.expand_dims(array, axis=0)
 
 
-def pasted_image_tensor(component_value):
-    """Decode an image pasted into the clipboard component without writing it to disk."""
-    if not isinstance(component_value, dict):
+def pasted_image_tensor(chat_value):
+    """Read an image submitted through Streamlit's native paste-capable chat input."""
+    if chat_value is None:
         return None
-    for item in component_value.get("uploadedFiles", []):
-        if not isinstance(item, dict) or not str(item.get("type", "")).startswith("image/"):
-            continue
-        data_url = item.get("content", "")
-        if not isinstance(data_url, str) or "," not in data_url:
-            continue
+    for item in chat_value.files:
         try:
-            raw = base64.b64decode(data_url.split(",", 1)[1], validate=True)
-            return image_tensor(BytesIO(raw))
+            if item.type and item.type.startswith("image/"):
+                return image_tensor(item)
         except Exception:
             continue
     return None
@@ -118,15 +111,15 @@ def image_input(label: str, key: str):
             return None
         return image_tensor(upload)
 
-    from st_multimodal_chatinput import multimodal_chatinput
-
-    value = multimodal_chatinput(
+    value = st.chat_input(
+        "Paste or attach an image, then press send",
+        accept_file=True,
+        file_type=["jpg", "jpeg", "png"],
         key=f"{key}_paste",
-        placeholder="Click here, then paste an image with Ctrl+V / ⌘V",
     )
     pasted = pasted_image_tensor(value)
     if pasted is None:
-        st.caption("Copy an image, click the box above, and paste. You can also attach an image there.")
+        st.caption("Copy an image, click the box above, paste with Ctrl+V / ⌘V, and press send. You can also attach an image there.")
     return pasted
 
 
