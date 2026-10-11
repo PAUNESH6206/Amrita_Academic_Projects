@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import base64
+from io import BytesIO
 from pathlib import Path
 
 import numpy as np
@@ -83,6 +85,51 @@ def image_tensor(upload) -> tuple[Image.Image, np.ndarray]:
     return display, np.expand_dims(array, axis=0)
 
 
+def pasted_image_tensor(component_value):
+    """Decode an image pasted into the clipboard component without writing it to disk."""
+    if not isinstance(component_value, dict):
+        return None
+    for item in component_value.get("uploadedFiles", []):
+        if not isinstance(item, dict) or not str(item.get("type", "")).startswith("image/"):
+            continue
+        data_url = item.get("content", "")
+        if not isinstance(data_url, str) or "," not in data_url:
+            continue
+        try:
+            raw = base64.b64decode(data_url.split(",", 1)[1], validate=True)
+            return image_tensor(BytesIO(raw))
+        except Exception:
+            continue
+    return None
+
+
+def image_input(label: str, key: str):
+    """Offer a normal file picker or clipboard paste for one image."""
+    mode = st.radio(
+        f"{label} input method",
+        ["Upload a file", "Copy & paste"],
+        horizontal=True,
+        key=f"{key}_input_method",
+        label_visibility="collapsed",
+    )
+    if mode == "Upload a file":
+        upload = st.file_uploader(label, type=["jpg", "jpeg", "png"], key=f"{key}_upload")
+        if upload is None:
+            return None
+        return image_tensor(upload)
+
+    from st_multimodal_chatinput import multimodal_chatinput
+
+    value = multimodal_chatinput(
+        key=f"{key}_paste",
+        placeholder="Click here, then paste an image with Ctrl+V / ⌘V",
+    )
+    pasted = pasted_image_tensor(value)
+    if pasted is None:
+        st.caption("Copy an image, click the box above, and paste. You can also attach an image there.")
+    return pasted
+
+
 def get_probability(model, hist_array: np.ndarray, us_array: np.ndarray) -> float:
     inputs = {
         "histopathology_input": hist_array,
@@ -144,29 +191,29 @@ elif page == "Try a prediction":
         st.caption("Upload the histopathology and ultrasound images from the same case.")
         col1, col2 = st.columns(2)
         with col1:
-            hist_file = st.file_uploader("① Histopathology image", type=["jpg", "jpeg", "png"], key="hist")
+            hist_input = image_input("① Histopathology image", "hist")
             st.caption("Tissue slide or pathology image")
         with col2:
-            us_file = st.file_uploader("② Ultrasound image", type=["jpg", "jpeg", "png"], key="ultrasound")
+            us_input = image_input("② Ultrasound image", "ultrasound")
             st.caption("Corresponding ultrasound image")
     else:
         st.caption(f"Upload one {selected_model.lower()} image.")
-        single_file = st.file_uploader(f"{selected_model} image", type=["jpg", "jpeg", "png"], key="single_image")
-        hist_file = us_file = None
+        single_input = image_input(f"{selected_model} image", "single_image")
+        hist_input = us_input = None
     hist_array = us_array = single_array = None
     if is_fusion:
-        if hist_file:
-            hist_display, hist_array = image_tensor(hist_file)
+        if hist_input:
+            hist_display, hist_array = hist_input
             st.image(hist_display, caption="Histopathology input", use_container_width=True)
-        if us_file:
-            us_display, us_array = image_tensor(us_file)
+        if us_input:
+            us_display, us_array = us_input
             st.image(us_display, caption="Ultrasound input", use_container_width=True)
-        ready = bool(hist_file and us_file and model_path.is_file())
+        ready = bool(hist_input and us_input and model_path.is_file())
     else:
-        if single_file:
-            single_display, single_array = image_tensor(single_file)
+        if single_input:
+            single_display, single_array = single_input
             st.image(single_display, caption=f"{selected_model} input", use_container_width=True)
-        ready = bool(single_file and model_path.is_file())
+        ready = bool(single_input and model_path.is_file())
     button_text = "Analyze image pair" if is_fusion else "Analyze image"
     if st.button(button_text, type="primary", disabled=not ready, use_container_width=True):
         try:
@@ -229,7 +276,7 @@ else:
     st.markdown("### Labels and score")
     st.write("The notebook maps benign and normal examples to class 0, and malignant examples to class 1. The displayed score is the model output for class 1. A 0.50 threshold is used only to show a simple predicted class.")
     st.markdown("### Bring your own data")
-    st.write("For an individual model, select one image. For fusion, select the histopathology and ultrasound images from the same case. On a hosted deployment, uploaded images are sent to that app's Streamlit server for inference; this app does not save the images to disk.")
+    st.write("For an individual model, select one image. For fusion, select the histopathology and ultrasound images from the same case. You can upload a file or paste an image from your clipboard without creating a local image file. In a hosted deployment, either method sends image bytes to the Streamlit server for inference; this app does not save the images to disk.")
     st.markdown("### Limitations")
     st.write("The notebook reports different validation sets for each model (116 paired examples for fusion). These metrics are useful for project evaluation, but do not establish clinical safety or generalization. Do not use this prototype for screening, diagnosis, treatment, or other medical decisions.")
     st.markdown("### Dataset reference")
@@ -237,3 +284,4 @@ else:
     st.markdown("### Model artifacts")
     st.code("models/histopathology_model.keras\nmodels/ultrasound_model.keras\nmodels/xray_model.keras\nmodels/hist_ultrasound_fusion_model.keras")
     st.write("The four supplied Keras model files are installed with this dashboard. Each is loaded only when selected for a prediction.")
+
