@@ -1,0 +1,13 @@
+# Kaggle notebook runtime; most packages are preinstalled in Kaggle images.
+transformers
+datasets
+accelerate
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn
+shap
+peft
+rouge-score
+

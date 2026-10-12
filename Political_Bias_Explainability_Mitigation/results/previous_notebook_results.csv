@@ -1,0 +1,7 @@
+model,task,provenance,accuracy,precision,recall,weighted_f1,macro_f1,mcc,cohen_kappa,test_samples,rouge1_f1_avg,rouge2_f1_avg,rougeL_f1_avg
+ALBERT,classification,saved source notebook output,0.6601,0.6714,0.6601,0.6585,0.6585,0.5779,0.5751,1109,,,
+DistilBERT (evaluation A),classification,saved source notebook output,0.6673,0.6684,0.6673,0.6668,,,,,,,
+DistilBERT (evaluation B),classification,saved source notebook output,0.6943,0.7049,0.6943,0.6953,0.6953,0.6199,0.6179,1109,,,
+RoBERTa,classification,saved source notebook output,0.7773,0.7818,0.7773,0.7766,0.7719,0.7137,0.7122,1419,,,
+BART + LoRA,mitigation generation,saved source notebook output,,,,,,,,,0,0.8518,0.832,0.8406
+
