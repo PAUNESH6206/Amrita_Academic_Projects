@@ -5,3 +5,4 @@ DistilBERT (evaluation B),classification,saved source notebook output,0.6943,0.7
 RoBERTa,classification,saved source notebook output,0.7773,0.7818,0.7773,0.7766,0.7719,0.7137,0.7122,1419,,,
 BART + LoRA,mitigation generation,saved source notebook output,,,,,,,,,0,0.8518,0.832,0.8406
 
+ALBERT (Kaggle run),classification,Kaggle T4x2 execution; saved notebook Version 1,0.646528,0.647371,0.646528,0.646143,0.646151,0.558496,0.558155,1109,,,,
