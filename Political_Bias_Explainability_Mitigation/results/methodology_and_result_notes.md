@@ -25,6 +25,12 @@ These are transcribed from the outputs embedded in the supplied notebooks (which
 
 Metrics are in `[previous_notebook_results.csv](previous_notebook_results.csv)`. BART generation scores are not classification metrics and cannot be compared against accuracy/F1. The classifier test sets differ in sample count and balancing; the numbers are not a controlled model leaderboard.
 
+## Kaggle rerun status (12 Oct 2026)
+
+- **ALBERT:** Kaggle T4x2 execution completed through preprocessing, training, test evaluation and diagnostic plots. Training stopped early before the 40-epoch ceiling. The model save cell completed, and the added results exporter wrote JSON/CSV files under `/kaggle/working/results`. Kaggle notebook [Political Bias Classification — ALBERT](https://www.kaggle.com/code/ponssvvv/political-bias-classification-albert) Version 1 saved successfully. The Kaggle test metrics (N=1,109) are accuracy 0.646528, weighted F1 0.646143, macro F1 0.646151, MCC 0.558496 and Cohen's kappa 0.558155. This is a fresh run and differs from the historic embedded output; preserve both rows in the CSV.
+- **DistilBERT, RoBERTa, and BART + LoRA:** not yet rerun on Kaggle. Their source-notebook figures remain historical only.
+- **Artifacts:** the committed notebook contains the exporter code. Kaggle keeps the saved execution output and model artifacts with its version; no large trained weights are placed in GitHub.
+
 ## Items to verify during Kaggle reruns
 
 1. Confirm the attached Kaggle dataset contains `bias_clean.csv` with `page_text` and `bias`; the importer now searches for the filename rather than assuming a particular mount path.
