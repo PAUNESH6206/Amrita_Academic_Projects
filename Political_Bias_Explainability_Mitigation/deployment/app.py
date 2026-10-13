@@ -7,6 +7,7 @@ import torch
 from peft import PeftModel
 from transformers import AutoConfig, AutoModelForSequenceClassification, AutoModelForSeq2SeqLM, AutoTokenizer
 
+
 ROOT = Path(__file__).resolve().parent
 BART_DIR, CLS_DIR, ARTIFACTS = ROOT / "model", ROOT / "classifier_model", ROOT / "artifacts"
 WEIGHT_URL = "https://github.com/pauneshvaradharajan/Amrita_Academic_Projects/releases/download/roberta-classifier-v1/model.safetensors"
@@ -14,6 +15,7 @@ WEIGHT_SHA256 = "0A6B7C59399A93CF7658A161C856850BB1D90E71549FBBCACE29CF64155C74A
 LABELS = {0:"Center", 1:"Leaning-left", 2:"Leaning-right", 3:"Left", 4:"Right"}
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 torch.set_num_threads(min(4, os.cpu_count() or 1))
+
 
 st.set_page_config(page_title="Political Lens | Bias Lab", page_icon="🧭", layout="wide")
 st.markdown("""
@@ -26,6 +28,12 @@ div.stButton>button,div.stDownloadButton>button{border-radius:10px;font-weight:6
 .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;font-weight:750;color:#5268a5}.hero h1{color:#17233b;font-size:clamp(2.2rem,5vw,3.7rem);line-height:1.05;margin:.6rem 0}.hero p{color:#58657c;font-size:1.05rem;max-width:720px;margin:.5rem 0}
 .word-stack{display:inline-grid;position:relative;vertical-align:top;min-width:5.5em;height:1.12em;color:#3157d5}.word-stack span{grid-area:1/1;opacity:0;animation:wordcycle 8s linear infinite}.word-stack .w1{animation-delay:0s}.word-stack .w2{animation-delay:-2s}.word-stack .w3{animation-delay:-4s}.word-stack .w4{animation-delay:-6s}
 @keyframes wordcycle{0%,19%{opacity:1;transform:translateY(0)}24%,100%{opacity:0;transform:translateY(-.15em)}}@media(prefers-reduced-motion:reduce){.word-stack span{animation:none;opacity:0}.word-stack .w1{opacity:1}}
+
+/* High contrast for the light dashboard */
+.stApp p,.stApp label,.stApp small,.stApp [data-testid="stMarkdownContainer"] *,.stApp [data-testid="stWidgetLabel"] *,.stApp [data-testid="stMetricLabel"] *,.stApp [data-testid="stMetricDelta"] *,.stApp [role="tab"],.stApp [role="tab"] *,.stApp [data-baseweb="tab"],.stApp [data-baseweb="tab"] *{color:#173b68!important;opacity:1!important}
+.stApp [data-testid="stMetricValue"]{color:#176b55!important}
+.stApp [data-testid="stCaptionContainer"] *{color:#52647a!important}
+.stApp [role="tab"][aria-selected="true"],.stApp [role="tab"][aria-selected="true"] *,.stApp [data-baseweb="tab"][aria-selected="true"],.stApp [data-baseweb="tab"][aria-selected="true"] *{color:#174bc6!important}
 </style><div class="hero"><div class="eyebrow">Political text · research demo</div><h1>Read with a<br><span class="word-stack"><span class="w1">clearer lens.</span><span class="w2">fairer lens.</span><span class="w3">curious lens.</span><span class="w4">wider lens.</span></span></h1><p>Explore a RoBERTa classifier and a BART rewrite assistant. These research tools are starting points for analysis, not verdicts about truth.</p></div>
 """, unsafe_allow_html=True)
 st.caption("Two models · five dataset labels · review every output")
@@ -35,12 +43,14 @@ with st.sidebar:
     st.divider()
     st.caption("Predictions reflect labels in one dataset. They are not objective fact, publisher intent, or misinformation checks.")
 
+
 @st.cache_resource(show_spinner="Loading BART + LoRA…")
 def load_bart():
     cfg=json.loads((BART_DIR/"deployment_config.json").read_text(encoding="utf-8"))
     tok=AutoTokenizer.from_pretrained(str(BART_DIR))
     base=AutoModelForSeq2SeqLM.from_pretrained(cfg["base_model"])
     return tok,PeftModel.from_pretrained(base,str(BART_DIR)).to(DEVICE).eval(),cfg
+
 
 def classifier_dir():
     d=Path(tempfile.gettempdir())/"political_lens_roberta"; d.mkdir(parents=True,exist_ok=True)
@@ -69,6 +79,7 @@ def classifier_dir():
             if tmp.exists(): tmp.unlink()
     return d
 
+
 @st.cache_resource(show_spinner="Loading RoBERTa classifier…")
 def load_classifier():
     d=classifier_dir(); tok=AutoTokenizer.from_pretrained(str(d),local_files_only=True)
@@ -76,9 +87,11 @@ def load_classifier():
     mdl=AutoModelForSequenceClassification.from_pretrained(str(d),config=cfg,local_files_only=True,use_safetensors=True).to(DEVICE).eval()
     return tok,mdl
 
+
 def free_other(current):
     (load_bart if current=="classifier" else load_classifier).clear(); gc.collect()
     if torch.cuda.is_available(): torch.cuda.empty_cache()
+
 
 t_cls,t_rewrite,t_info=st.tabs(["🔎 Classify an article","✍️ Explore a rewrite","📊 Evaluation & notes"])
 with t_cls:
@@ -101,6 +114,7 @@ with t_cls:
                     st.markdown("**Score by label**"); st.bar_chart(pd.DataFrame({"Score":scores},index=[LABELS[i] for i in range(len(scores))]),color="#5275df")
                 st.info("The score distribution is not the probability that a political label is objectively correct.")
             except Exception as e: st.error(f"Classification could not run: {e}")
+
 
 with t_rewrite:
     st.subheader("Explore a neutralized rewrite")
@@ -127,6 +141,7 @@ with t_rewrite:
                 except Exception as e: st.error(f"Rewrite could not be generated: {e}")
         else: st.info("Your rewrite will appear here.")
     st.warning("Review each rewrite for factual accuracy, context, and meaning before sharing.")
+
 
 with t_info:
     st.subheader("BART evaluation snapshot")
