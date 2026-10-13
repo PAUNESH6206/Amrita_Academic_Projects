@@ -1,0 +1,7 @@
+streamlit
+torch
+transformers==4.57.6
+peft
+accelerate
+sentencepiece
+pandas

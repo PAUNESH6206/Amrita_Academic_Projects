@@ -1,0 +1,5 @@
+{
+  "base_model": "facebook/bart-base",
+  "max_input_length": 256,
+  "max_new_tokens": 160
+}

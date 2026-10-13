@@ -1,0 +1,8 @@
+{
+  "evaluation_sample_count": 10,
+  "bleu": 0.9621685036483187,
+  "rouge1_f1": 0.9884821030907502,
+  "rouge2_f1": 0.9825762711563492,
+  "rougeL_f1": 0.9884821030907502,
+  "note": "Averages on up to 10 fixed test examples; overlap scores do not prove neutrality or factual correctness."
+}
