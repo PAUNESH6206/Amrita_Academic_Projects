@@ -30,9 +30,10 @@ div.stButton>button,div.stDownloadButton>button{border-radius:10px;font-weight:6
 @keyframes wordcycle{0%,19%{opacity:1;transform:translateY(0)}24%,100%{opacity:0;transform:translateY(-.15em)}}@media(prefers-reduced-motion:reduce){.word-stack span{animation:none;opacity:0}.word-stack .w1{opacity:1}}
 
 /* High contrast for the light dashboard */
-.stApp p,.stApp label,.stApp small,.stApp [data-testid="stMarkdownContainer"] *,.stApp [data-testid="stWidgetLabel"] *,.stApp [data-testid="stMetricLabel"] *,.stApp [data-testid="stMetricDelta"] *,.stApp [role="tab"],.stApp [role="tab"] *,.stApp [data-baseweb="tab"],.stApp [data-baseweb="tab"] *{color:#173b68!important;opacity:1!important}
+.stApp p,.stApp label,.stApp small,.stApp [data-testid="stMarkdownContainer"] *, .stApp [data-testid="stWidgetLabel"] *,.stApp [data-testid="stMetricLabel"] *,.stApp [data-testid="stMetricDelta"] *{color:#173b68!important}
 .stApp [data-testid="stMetricValue"]{color:#176b55!important}
-.stApp [data-testid="stCaptionContainer"] *{color:#52647a!important}
+.stApp [data-testid="stCaptionContainer"] *{color:#52647a!important;opacity:1!important}
+.stApp [role="tab"],.stApp [role="tab"] *,.stApp [data-baseweb="tab"],.stApp [data-baseweb="tab"] *{color:#173b68!important;opacity:1!important}
 .stApp [role="tab"][aria-selected="true"],.stApp [role="tab"][aria-selected="true"] *,.stApp [data-baseweb="tab"][aria-selected="true"],.stApp [data-baseweb="tab"][aria-selected="true"] *{color:#174bc6!important}
 </style><div class="hero"><div class="eyebrow">Political text · research demo</div><h1>Read with a<br><span class="word-stack"><span class="w1">clearer lens.</span><span class="w2">fairer lens.</span><span class="w3">curious lens.</span><span class="w4">wider lens.</span></span></h1><p>Explore a RoBERTa classifier and a BART rewrite assistant. These research tools are starting points for analysis, not verdicts about truth.</p></div>
 """, unsafe_allow_html=True)
