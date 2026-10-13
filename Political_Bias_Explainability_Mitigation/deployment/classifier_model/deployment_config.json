@@ -1,0 +1,5 @@
+{
+  "labels_by_id": {"0": "center", "1": "leaning-left", "2": "leaning-right", "3": "left", "4": "right"},
+  "max_length": 256,
+  "weight_sha256": "0A6B7C59399A93CF7658A161C856850BB1D90E71549FBBCACE29CF64155C74A7"
+}
